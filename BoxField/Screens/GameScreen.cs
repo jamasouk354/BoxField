@@ -32,9 +32,8 @@ namespace BoxField
         /// </summary>
         public void OnStart()
         {
-            //TODO - set game start values
-            Box b1 = new Box(30, 30, 30);
-            boxesLeft.Add(b1);
+            boxesLeft.Add(new Box(30, 30, 30));
+            boxesRight.Add(new Box(130, 30, 30));
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -67,27 +66,26 @@ namespace BoxField
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            //TODO - update location of all boxes (drop down screen)
             timer++;
+            //TODO - update location of all boxes (drop down screen)            
+            foreach (Box bL in boxesLeft) { bL.y = bL.y + 5; }
+            foreach (Box bR in boxesRight) { bR.y = bR.y + 5; }
+            //TODO - remove box if it has gone of screen
+            if (boxesLeft[0].y == this.Height) { boxesLeft.Remove(boxesLeft[0]); }
+            //TODO - add new box if it is time
             if (timer == 10)
             {
                 OnStart();
                 timer = 0;
             }
-            foreach (Box b in boxesLeft) { b.y = b.y + 5; }
-            //TODO - remove box if it has gone of screen
-            if (boxesLeft[0].y == this.Height) { boxesLeft.RemoveAt(0); }
-            //TODO - add new box if it is time                        
             Refresh();
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             //TODO - draw boxes to screen
-            foreach (Box b in boxesLeft)
-            {
-                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
-            }
+            foreach (Box b in boxesLeft) { e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size); }
+            foreach (Box b in boxesRight) { e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size); }
         }
     }
 }
