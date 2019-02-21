@@ -17,11 +17,13 @@ namespace BoxField
 
         //used to draw boxes on screen
         SolidBrush boxBrush = new SolidBrush(Color.White);
+        Pen outLine = new Pen(Color.Black, 4);
 
         List<Box> boxesLeft = new List<Box>();
         List<Box> boxesRight = new List<Box>();
         int timer = 0;
-
+        Random randGen = new Random();
+        
         public GameScreen()
         {
             InitializeComponent();
@@ -32,8 +34,8 @@ namespace BoxField
         /// </summary>
         public void OnStart()
         {
-            boxesLeft.Add(new Box(30, 30, 30));
-            boxesRight.Add(new Box(130, 30, 30));
+            boxesLeft.Add(new Box(30, 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
+            boxesRight.Add(new Box(130, 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -68,11 +70,16 @@ namespace BoxField
         {
             timer++;
             //TODO - update location of all boxes (drop down screen)            
-            foreach (Box bL in boxesLeft) { bL.y = bL.y + 5; }
-            foreach (Box bR in boxesRight) { bR.y = bR.y + 5; }
-            //TODO - remove box if it has gone of screen
-            if (boxesLeft[0].y == this.Height) { boxesLeft.Remove(boxesLeft[0]); }
-            //TODO - add new box if it is time
+            foreach (Box bL in boxesLeft)
+            {
+                bL.y = bL.y + 5;
+                if (boxesRight[0].y == this.Height-50) { boxesRight.Remove(boxesRight[0]); }
+            }
+            foreach (Box bR in boxesRight)
+            {
+                bR.y = bR.y + 5;
+                if (boxesLeft[0].y == this.Height-50) { boxesLeft.Remove(boxesLeft[0]); }
+            }
             if (timer == 10)
             {
                 OnStart();
@@ -83,9 +90,20 @@ namespace BoxField
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //TODO - draw boxes to screen
-            foreach (Box b in boxesLeft) { e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size); }
-            foreach (Box b in boxesRight) { e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size); }
+            #region Creates Boxes(left&right)w/ random Colors
+            for (int i = 0; i < boxesLeft.Count; i++)
+            {
+                boxBrush = new SolidBrush(Color.FromArgb(255, boxesLeft[i].red, boxesLeft[i].green, boxesLeft[i].blue));
+                e.Graphics.DrawRectangle(outLine, boxesLeft[i].x, boxesLeft[i].y, boxesLeft[i].size, boxesLeft[i].size);
+                e.Graphics.FillRectangle(boxBrush, boxesLeft[i].x, boxesLeft[i].y, boxesLeft[i].size, boxesLeft[i].size);
+            }
+            for (int i = 0; i < boxesRight.Count; i++)
+            {
+                boxBrush = new SolidBrush(Color.FromArgb(255, boxesRight[i].red, boxesRight[i].green, boxesRight[i].blue));
+                e.Graphics.DrawRectangle(outLine, boxesRight[i].x, boxesRight[i].y, boxesRight[i].size, boxesRight[i].size);
+                e.Graphics.FillRectangle(boxBrush, boxesRight[i].x, boxesRight[i].y, boxesRight[i].size, boxesRight[i].size);
+            }
+            #endregion
         }
     }
 }
