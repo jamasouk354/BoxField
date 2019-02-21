@@ -12,6 +12,7 @@ namespace BoxField
 {
     public partial class GameScreen : UserControl
     {
+        #region Global Values
         //player1 button control keys
         Boolean leftArrowDown, rightArrowDown;
 
@@ -23,7 +24,8 @@ namespace BoxField
         List<Box> boxesRight = new List<Box>();
         int timer = 0;
         Random randGen = new Random();
-        
+
+        #endregion
         public GameScreen()
         {
             InitializeComponent();
@@ -34,8 +36,8 @@ namespace BoxField
         /// </summary>
         public void OnStart()
         {
-            boxesLeft.Add(new Box(30, 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
-            boxesRight.Add(new Box(130, 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
+            boxesLeft.Add(new Box(200 + randGen.Next(-20, 20), 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
+            boxesRight.Add(new Box(400 + randGen.Next(-20, 20), 30, 30, randGen.Next(1, 255), randGen.Next(1, 255), randGen.Next(1, 255)));
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -69,10 +71,10 @@ namespace BoxField
         private void gameLoop_Tick(object sender, EventArgs e)
         {
             timer++;
-            //TODO - update location of all boxes (drop down screen)            
-            foreach (Box bL in boxesLeft)
+            //TODO - update location of all boxes (drop down screen)
+            for (int i = 0; i < boxesLeft.Count; i++)
             {
-                bL.y = bL.y + 5;
+                boxesLeft[i].y = boxesLeft[i].y + 5;
                 if (boxesRight[0].y == this.Height-50) { boxesRight.Remove(boxesRight[0]); }
             }
             foreach (Box bR in boxesRight)
