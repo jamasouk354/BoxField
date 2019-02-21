@@ -72,9 +72,9 @@ namespace BoxField
         {
             timer++;
             //TODO - update location of all boxes (drop down screen)
-            for (int i = 0; i < boxesLeft.Count; i++)
+            foreach (Box bL in boxesRight)
             {
-                boxesLeft[i].y = boxesLeft[i].y + 5;
+                bL.y = bL.y + 5;
                 if (boxesRight[0].y == this.Height-50) { boxesRight.Remove(boxesRight[0]); }
             }
             foreach (Box bR in boxesRight)
